@@ -7,6 +7,7 @@ createInertiaApp({
     setup({ el, App, props, plugin }) {
         createApp({ render: () => h(App, props) })
             .use(plugin)
+            .mixin({methods: { route }})
             .mount(el)
     },
 })
@@ -25,5 +26,5 @@ InertiaProgress.init({
     includeCSS: true,
 
     // Whether the NProgress spinner will be shown.
-    showSpinner: true,
+    showSpinner: false,
 })
