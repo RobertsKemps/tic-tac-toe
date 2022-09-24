@@ -7,8 +7,6 @@ import 'bootstrap';
  * code may be modified to fit the specific needs of your application.
  */
 
-import '@popperjs/core'
-
 const bootstrap = require('bootstrap')
 
 window.bootstrap = bootstrap

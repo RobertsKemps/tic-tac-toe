@@ -14,8 +14,5 @@ use Inertia\Inertia;
 |
 */
 
-Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'test' => 'Titty man',
-    ]);
-});
+Route::inertia('/', 'Welcome')->name('index');
+Route::inertia('basic', 'BasicBoard')->name('game.basic');
