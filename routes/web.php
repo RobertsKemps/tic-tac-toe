@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BoardController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -15,4 +16,5 @@ use Inertia\Inertia;
 */
 
 Route::inertia('/', 'Welcome')->name('index');
-Route::inertia('basic', 'BasicBoard')->name('game.basic');
+Route::get('basic', [BoardController::class, 'basicGame'])->name('game.basic');
+Route::get('versus/bot', [BoardController::class, 'versusBot'])->name('game.versus.bot');

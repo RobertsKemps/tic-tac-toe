@@ -19534,10 +19534,13 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   components: {
-    Link: _inertiajs_inertia_vue3__WEBPACK_IMPORTED_MODULE_1__.Link,
-    Layout: _Shared_Layout__WEBPACK_IMPORTED_MODULE_2__["default"]
+    Link: _inertiajs_inertia_vue3__WEBPACK_IMPORTED_MODULE_1__.Link
   },
-  setup: function setup() {
+  layout: _Shared_Layout__WEBPACK_IMPORTED_MODULE_2__["default"],
+  props: {
+    versusBot: Boolean
+  },
+  setup: function setup(props) {
     var player = (0,vue__WEBPACK_IMPORTED_MODULE_0__.ref)('X');
     var board = (0,vue__WEBPACK_IMPORTED_MODULE_0__.ref)([['', '', ''], ['', '', ''], ['', '', '']]);
 
@@ -19572,11 +19575,78 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
       board.value[x][y] = player.value; //Change who's turn it is after making a move
 
       player.value = player.value === 'X' ? 'O' : 'X';
+
+      if (props.versusBot) {
+        //Change who's turn it is after making a move
+        var botMove = minimax(JSON.parse(JSON.stringify(board)), player.value);
+
+        if (botMove.move) {
+          board.value[botMove.move.x][botMove.move.y] = player.value;
+        }
+
+        player.value = player.value === 'X' ? 'O' : 'X';
+      }
     };
 
     var resetGame = function resetGame() {
       board.value = [['', '', ''], ['', '', ''], ['', '', '']];
       player.value = 'X';
+    };
+
+    var minimax = function minimax(board, player) {
+      var depth = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 1;
+      // The 'o' player wants to maximize its score, the 'x' player wants to
+      // minimize its score.
+      var bestScore = player === 'O' ? -10000 : 10000;
+      var bestMove = null;
+      var moves = getPossibleMoves(board);
+
+      for (var i = 0; i < moves.length; i++) {
+        var move = moves[i];
+        var newBoard = board;
+        makeAiMove(move.x, move.y, player, newBoard); // Recursively call the minimax function for the new board.
+
+        var score = minimax(newBoard, player === 'x' ? 'O' : 'X', depth).score; // If the score is better than the best saved score update the best saved
+        // score to this move.
+
+        if (player === 'O' && score > bestScore || player === 'X' && score < bestScore) {
+          bestScore = score;
+          bestMove = move;
+        }
+      } // Return the best found score & move!
+
+
+      return {
+        score: bestScore,
+        move: bestMove
+      };
+    };
+
+    var getPossibleMoves = function getPossibleMoves(aiMoveBoard) {
+      var moves = [];
+
+      for (var i = 0; i < 3; i++) {
+        for (var j = 0; j < 3; j++) {
+          if (aiMoveBoard._rawValue[i][j] === '') {
+            moves.push({
+              x: i,
+              y: j
+            });
+          }
+        }
+      }
+
+      console.log(moves);
+      return moves;
+    };
+
+    var makeAiMove = function makeAiMove(x, y, player, aiMoveBoard) {
+      if (aiMoveBoard._rawValue[x][y] !== '') {
+        return false;
+      }
+
+      aiMoveBoard._rawValue[x][y] = player;
+      return true;
     };
 
     return {
@@ -19609,9 +19679,9 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   components: {
-    Link: _inertiajs_inertia_vue3__WEBPACK_IMPORTED_MODULE_0__.Link,
-    Layout: _Shared_Layout__WEBPACK_IMPORTED_MODULE_1__["default"]
-  }
+    Link: _inertiajs_inertia_vue3__WEBPACK_IMPORTED_MODULE_0__.Link
+  },
+  layout: _Shared_Layout__WEBPACK_IMPORTED_MODULE_1__["default"]
 });
 
 /***/ }),
@@ -19676,13 +19746,13 @@ var _hoisted_1 = {
 };
 
 var _hoisted_2 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h1", {
-  "class": "display-4"
+  "class": "font-bold font-sans break-normal text-gray-900 pt-6 pb-2 text-3xl md:text-4xl"
 }, "Tic tac toe game", -1
 /* HOISTED */
 );
 
 var _hoisted_3 = {
-  "class": "display-6 pt-2"
+  "class": "text-sm md:text-base font-normal text-gray-900 pb-2"
 };
 
 var _hoisted_4 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Player ");
@@ -19698,47 +19768,40 @@ var _hoisted_8 = {
 };
 var _hoisted_9 = {
   key: 0,
-  "class": "text-6xl font-bold mb-8"
+  "class": "text-3xl font-bold mb-8"
 };
 function render(_ctx, _cache, $props, $setup, $data, $options) {
-  var _component_Layout = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("Layout");
-
-  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_Layout, null, {
-    "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-      return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_1, [_hoisted_2, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h3", _hoisted_3, [_hoisted_4, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($setup.player), 1
-      /* TEXT */
-      ), _hoisted_5])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_6, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($setup.board, function (row, x) {
-        return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", {
-          key: x,
-          "class": "flex"
-        }, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)(row, function (cell, y) {
-          return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", {
-            key: y,
-            onClick: function onClick($event) {
-              return $setup.makeMove(x, y);
-            },
-            "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)("border border-black w-24 h-24 hover:bg-gray-200 flex items-center justify-center material-icons-outlined text-4xl cursor-pointer> ".concat(cell === 'X' ? 'text-red-500' : 'text-blue-400'))
-          }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(cell === 'X' ? 'X' : cell === 'O' ? 'O' : ''), 11
-          /* TEXT, CLASS, PROPS */
-          , _hoisted_7);
-        }), 128
-        /* KEYED_FRAGMENT */
-        ))]);
-      }), 128
-      /* KEYED_FRAGMENT */
-      ))]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_8, [$setup.winner ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("h2", _hoisted_9, "Player '" + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($setup.winner) + "' wins!", 1
-      /* TEXT */
-      )) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
-        onClick: _cache[0] || (_cache[0] = function () {
-          return $setup.resetGame && $setup.resetGame.apply($setup, arguments);
-        }),
-        "class": "px-4 py-2 bg-green-500 rounded uppercase font-bold hover:bg-green-700 duration-300"
-      }, " Reset ")])];
+  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_1, [_hoisted_2, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", _hoisted_3, [_hoisted_4, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($setup.player), 1
+  /* TEXT */
+  ), _hoisted_5])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_6, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($setup.board, function (row, x) {
+    return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", {
+      key: x,
+      "class": "flex"
+    }, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)(row, function (cell, y) {
+      return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", {
+        key: y,
+        onClick: function onClick($event) {
+          return $setup.makeMove(x, y);
+        },
+        "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)("border border-black w-24 h-24 hover:bg-gray-200 flex items-center justify-center material-icons-outlined text-4xl cursor-pointer> ".concat(cell === 'X' ? 'text-red-500' : 'text-blue-400'))
+      }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(cell === 'X' ? 'X' : cell === 'O' ? 'O' : ''), 11
+      /* TEXT, CLASS, PROPS */
+      , _hoisted_7);
+    }), 128
+    /* KEYED_FRAGMENT */
+    ))]);
+  }), 128
+  /* KEYED_FRAGMENT */
+  ))]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_8, [$setup.winner ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("h2", _hoisted_9, "Player " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($setup.winner) + " wins!", 1
+  /* TEXT */
+  )) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+    onClick: _cache[0] || (_cache[0] = function () {
+      return $setup.resetGame && $setup.resetGame.apply($setup, arguments);
     }),
-    _: 1
-    /* STABLE */
-
-  });
+    "class": "px-4 py-2 bg-green-500 rounded uppercase font-bold hover:bg-green-700 duration-300"
+  }, " Reset ")])], 64
+  /* STABLE_FRAGMENT */
+  );
 }
 
 /***/ }),
@@ -19760,8 +19823,8 @@ __webpack_require__.r(__webpack_exports__);
 var _hoisted_1 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
   "class": "container w-full md:max-w-3xl mx-auto"
 }, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h1", {
-  "class": "font-bold font-sans break-normal text-gray-900 pt-6 pb-2 text-3xl md:text-4xl"
-}, "Tic tac toe game"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", {
+  "class": "font-bold font-sans break-normal text-gray-900 pt-6 pb-6 text-3xl md:text-4xl"
+}, "What is it?"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", {
   "class": "text-sm md:text-base font-normal text-gray-600"
 }, " Tic-tac-toe is a paper-and-pencil game for two players who take turns marking the spaces in a three-by-three grid with X or O. The player who succeeds in placing three of their marks in a horizontal, vertical, or diagonal row is the winner. It is a solved game, with a forced draw assuming best play from both players ")], -1
 /* HOISTED */
@@ -19809,40 +19872,33 @@ var _hoisted_10 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNo
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _component_Link = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("Link");
 
-  var _component_Layout = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("Layout");
-
-  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_Layout, null, {
+  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, [_hoisted_1, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [_hoisted_4, _hoisted_5, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Link, {
+    href: _ctx.route('game.basic'),
+    "class": "mt-4 text-white bg-purple-500 hover:bg-purple-700 focus:ring-4 focus:ring-purple-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+  }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-      return [_hoisted_1, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [_hoisted_4, _hoisted_5, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Link, {
-        href: _ctx.route('game.basic'),
-        "class": "mt-4 text-white bg-purple-500 hover:bg-purple-700 focus:ring-4 focus:ring-purple-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
-      }, {
-        "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-          return [_hoisted_6];
-        }),
-        _: 1
-        /* STABLE */
-
-      }, 8
-      /* PROPS */
-      , ["href"])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_7, [_hoisted_8, _hoisted_9, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Link, {
-        href: _ctx.route('game.basic'),
-        "class": "mt-4 text-white bg-purple-500 hover:bg-purple-700 focus:ring-4 focus:ring-purple-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
-      }, {
-        "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-          return [_hoisted_10];
-        }),
-        _: 1
-        /* STABLE */
-
-      }, 8
-      /* PROPS */
-      , ["href"])])])];
+      return [_hoisted_6];
     }),
     _: 1
     /* STABLE */
 
-  });
+  }, 8
+  /* PROPS */
+  , ["href"])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_7, [_hoisted_8, _hoisted_9, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Link, {
+    href: _ctx.route('game.versus.bot'),
+    "class": "mt-4 text-white bg-purple-500 hover:bg-purple-700 focus:ring-4 focus:ring-purple-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+  }, {
+    "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+      return [_hoisted_10];
+    }),
+    _: 1
+    /* STABLE */
+
+  }, 8
+  /* PROPS */
+  , ["href"])])])], 64
+  /* STABLE_FRAGMENT */
+  );
 }
 
 /***/ }),
