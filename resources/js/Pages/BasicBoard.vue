@@ -1,13 +1,6 @@
 <template>
-    <div>
-        <div
-            class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom box-shadow">
-            <Link :href="route('index')">
-                <h5 class="my-0 mr-md-auto font-weight-normal">Tic tac toe</h5>
-            </Link>
-        </div>
-
-        <div class="pricing-header px-3 py-3 pt-md-2 pb-md-4 mx-auto text-center">
+    <Layout>
+        <div class="text-center">
             <h1 class="display-4">Tic tac toe game</h1>
             <h3 class="display-6 pt-2">Player <b>{{ player }}</b> turn</h3>
         </div>
@@ -32,25 +25,23 @@
                 Reset
             </button>
         </div>
-    </div>
+    </Layout>
 </template>
 
 <script>
 import {ref, computed} from 'vue';
 import {Link} from '@inertiajs/inertia-vue3';
+import Layout from "../Shared/Layout";
 
 export default {
-    components: {
-        Link
-    },
+    components: { Link, Layout },
     setup() {
         const player = ref('X');
-        const defaultBoardValues = [
+        const board = ref([
             ['', '', ''],
             ['', '', ''],
             ['', '', ''],
-        ];
-        const board = ref(defaultBoardValues);
+        ]);
 
         const calculateWinner = (squares) => {
 
@@ -65,6 +56,7 @@ export default {
                 [0, 4, 8],
                 [2, 4, 6],
             ];
+
             for (let i = 0; i < lines.length; i++) {
                 const [a, b, c] = lines[i];
 
@@ -93,7 +85,11 @@ export default {
         };
 
         const resetGame = () => {
-            board.value = defaultBoardValues;
+            board.value = [
+                ['', '', ''],
+                ['', '', ''],
+                ['', '', ''],
+            ];
             player.value = 'X';
         };
 
