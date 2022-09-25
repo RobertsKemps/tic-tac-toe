@@ -1,59 +1,52 @@
 <template>
-    <div>
-        <div
-            class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom box-shadow">
-            <Link :href="route('index')">
-                <h5 class="my-0 mr-md-auto font-weight-normal">Tic tac toe</h5>
-            </Link>
-        </div>
+    <div class="text-center">
+        <h1 class="font-bold font-sans break-normal text-gray-900 pt-6 pb-2 text-3xl md:text-4xl">Tic tac toe game</h1>
+        <p class="text-sm md:text-base font-normal text-gray-900 pb-2">Player <b>{{ player }}</b> turn</p>
+    </div>
 
-        <div class="pricing-header px-3 py-3 pt-md-2 pb-md-4 mx-auto text-center">
-            <h1 class="display-4">Tic tac toe game</h1>
-            <h3 class="display-6 pt-2">Player <b>{{ player }}</b> turn</h3>
-        </div>
-
-        <div class="flex flex-col items-center mb-8">
-            <div v-for="(row, x) in board" :key="x" class="flex">
-                <div
-                    v-for="(cell, y) in row" :key="y"
-                    @click="makeMove(x, y)"
-                    :class="`border border-black w-24 h-24 hover:bg-gray-200 flex items-center justify-center material-icons-outlined text-4xl cursor-pointer> ${cell === 'X' ? 'text-red-500' : 'text-blue-400'}`"
-                >
-                    {{ cell === 'X' ? 'X' : cell === 'O' ? 'O' : '' }}
-                </div>
+    <div class="flex flex-col items-center mb-8">
+        <div v-for="(row, x) in board" :key="x" class="flex">
+            <div
+                v-for="(cell, y) in row" :key="y"
+                @click="makeMove(x, y)"
+                :class="`border border-black w-24 h-24 hover:bg-gray-200 flex items-center justify-center material-icons-outlined text-4xl cursor-pointer> ${cell === 'X' ? 'text-red-500' : 'text-blue-400'}`"
+            >
+                {{ cell === 'X' ? 'X' : cell === 'O' ? 'O' : '' }}
             </div>
         </div>
+    </div>
 
-        <div class="text-center">
-            <h2 v-if="winner" class="text-6xl font-bold mb-8">Player '{{ winner }}' wins!</h2>
-            <button @click="resetGame"
-                    class="px-4 py-2 bg-green-500 rounded uppercase font-bold hover:bg-green-700 duration-300"
-            >
-                Reset
-            </button>
-        </div>
+    <div class="text-center">
+        <h2 v-if="winner" class="text-3xl font-bold mb-8">Player {{ winner }} wins!</h2>
+        <button @click="resetGame"
+                class="px-4 py-2 bg-green-500 rounded uppercase font-bold hover:bg-green-700 duration-300"
+        >
+            Reset
+        </button>
     </div>
 </template>
 
 <script>
 import {ref, computed} from 'vue';
 import {Link} from '@inertiajs/inertia-vue3';
+import Layout from "../Shared/Layout";
 
 export default {
-    components: {
-        Link
+    components: { Link },
+    layout: Layout,
+    props: {
+        versusBot: Boolean,
     },
-    setup() {
+
+    setup(props) {
         const player = ref('X');
-        const defaultBoardValues = [
+        const board = ref([
             ['', '', ''],
             ['', '', ''],
             ['', '', ''],
-        ];
-        const board = ref(defaultBoardValues);
+        ]);
 
         const calculateWinner = (squares) => {
-
             //All possible winning combinations
             const lines = [
                 [0, 1, 2],
@@ -65,6 +58,7 @@ export default {
                 [0, 4, 8],
                 [2, 4, 6],
             ];
+
             for (let i = 0; i < lines.length; i++) {
                 const [a, b, c] = lines[i];
 
@@ -90,12 +84,79 @@ export default {
 
             //Change who's turn it is after making a move
             player.value = player.value === 'X' ? 'O' : 'X';
+
+            if (props.versusBot) {
+                //Change who's turn it is after making a move
+                let botMove = minimax(JSON.parse(JSON.stringify(board)), player.value);
+
+                if (botMove.move) {
+                    board.value[botMove.move.x][botMove.move.y] = player.value;
+                }
+
+                player.value = player.value === 'X' ? 'O' : 'X';
+            }
         };
 
         const resetGame = () => {
-            board.value = defaultBoardValues;
+            board.value = [
+                ['', '', ''],
+                ['', '', ''],
+                ['', '', ''],
+            ];
             player.value = 'X';
         };
+
+        const minimax = (board, player, depth = 1) => {
+            // The 'o' player wants to maximize its score, the 'x' player wants to
+            // minimize its score.
+            let bestScore = player === 'O' ? -10000 : 10000;
+            let bestMove = null;
+            let moves = getPossibleMoves(board);
+            for (let i = 0; i < moves.length; i++) {
+                let move = moves[i];
+                let newBoard = board;
+                makeAiMove(move.x, move.y, player, newBoard);
+                // Recursively call the minimax function for the new board.
+                const score = minimax(newBoard, player === 'x' ? 'O' : 'X', depth).score;
+                // If the score is better than the best saved score update the best saved
+                // score to this move.
+
+                if ((player === 'O' && score > bestScore) || (player === 'X' && score < bestScore)) {
+                    bestScore = score;
+                    bestMove = move;
+                }
+            }
+
+            // Return the best found score & move!
+            return {
+                score: bestScore,
+                move: bestMove
+            }
+        }
+
+        const getPossibleMoves = (aiMoveBoard) => {
+            let moves = [];
+            for (let i=0; i<3; i++) {
+                for (let j=0; j<3; j++) {
+                    if (aiMoveBoard._rawValue[i][j] === '') {
+                        moves.push({x: i, y: j});
+                    }
+                }
+            }
+
+            console.log(moves);
+
+            return moves;
+        }
+
+        const makeAiMove = (x, y, player, aiMoveBoard) => {
+            if (aiMoveBoard._rawValue[x][y] !== '') {
+                return false;
+            }
+
+            aiMoveBoard._rawValue[x][y] = player;
+            return true;
+        }
 
         return {
             player,
@@ -106,5 +167,6 @@ export default {
             resetGame,
         }
     },
+
 }
 </script>

@@ -1,6 +1,18 @@
 <template>
+    <section class="pt-6">
+        <Nav />
+    </section>
 
+    <section class="pt-6">
+        <div class="md:max-w-4xl mx-auto pt-4">
+            <slot />
+        </div>
+    </section>
 </template>
-<scripts>
+<script>
+import Nav from './Nav';
 
-</scripts>
+export default {
+    components: { Nav },
+};
+</script>
