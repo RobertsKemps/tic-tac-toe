@@ -29,7 +29,8 @@
 <script>
 import {ref, computed} from 'vue';
 import {Link} from '@inertiajs/inertia-vue3';
-import Layout from "../Shared/Layout";
+import Layout from '../Shared/Layout';
+import {minimax} from '../Services/aiLogicService';
 
 export default {
     components: { Link },
@@ -37,7 +38,6 @@ export default {
     props: {
         versusBot: Boolean,
     },
-
     setup(props) {
         const player = ref('X');
         const board = ref([
@@ -45,7 +45,6 @@ export default {
             ['', '', ''],
             ['', '', ''],
         ]);
-
         const calculateWinner = (squares) => {
             //All possible winning combinations
             const lines = [
@@ -58,45 +57,33 @@ export default {
                 [0, 4, 8],
                 [2, 4, 6],
             ];
-
             for (let i = 0; i < lines.length; i++) {
                 const [a, b, c] = lines[i];
-
                 //Return the value that is found in the winning square
                 if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
                     return squares[a];
                 }
             }
-
             return null;
         }
-
         const winner = computed(() => calculateWinner(board.value.flat()));
-
         const makeMove = (x, y) => {
             //If there is a winner then do nothing
             if (winner.value) return;
-
             //Return if a symbol is already placed on the square
             if (board.value[x][y] !== '') return;
-
             board.value[x][y] = player.value;
-
             //Change who's turn it is after making a move
             player.value = player.value === 'X' ? 'O' : 'X';
-
             if (props.versusBot) {
                 //Change who's turn it is after making a move
                 let botMove = minimax(JSON.parse(JSON.stringify(board)), player.value);
-
                 if (botMove.move) {
                     board.value[botMove.move.x][botMove.move.y] = player.value;
                 }
-
                 player.value = player.value === 'X' ? 'O' : 'X';
             }
         };
-
         const resetGame = () => {
             board.value = [
                 ['', '', ''],
@@ -106,67 +93,13 @@ export default {
             player.value = 'X';
         };
 
-        const minimax = (board, player, depth = 1) => {
-            // The 'o' player wants to maximize its score, the 'x' player wants to
-            // minimize its score.
-            let bestScore = player === 'O' ? -10000 : 10000;
-            let bestMove = null;
-            let moves = getPossibleMoves(board);
-            for (let i = 0; i < moves.length; i++) {
-                let move = moves[i];
-                let newBoard = board;
-                makeAiMove(move.x, move.y, player, newBoard);
-                // Recursively call the minimax function for the new board.
-                const score = minimax(newBoard, player === 'x' ? 'O' : 'X', depth).score;
-                // If the score is better than the best saved score update the best saved
-                // score to this move.
-
-                if ((player === 'O' && score > bestScore) || (player === 'X' && score < bestScore)) {
-                    bestScore = score;
-                    bestMove = move;
-                }
-            }
-
-            // Return the best found score & move!
-            return {
-                score: bestScore,
-                move: bestMove
-            }
-        }
-
-        const getPossibleMoves = (aiMoveBoard) => {
-            let moves = [];
-            for (let i=0; i<3; i++) {
-                for (let j=0; j<3; j++) {
-                    if (aiMoveBoard._rawValue[i][j] === '') {
-                        moves.push({x: i, y: j});
-                    }
-                }
-            }
-
-            console.log(moves);
-
-            return moves;
-        }
-
-        const makeAiMove = (x, y, player, aiMoveBoard) => {
-            if (aiMoveBoard._rawValue[x][y] !== '') {
-                return false;
-            }
-
-            aiMoveBoard._rawValue[x][y] = player;
-            return true;
-        }
-
         return {
             player,
             board,
-            calculateWinner,
             winner,
             makeMove,
             resetGame,
         }
     },
-
 }
 </script>
