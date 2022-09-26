@@ -26,6 +26,14 @@ class BoardController extends Controller
         return Inertia::render('BasicBoard', ['versusBot' => true]);
     }
 
+    /**
+     * @return Response
+     */
+    public function versusPlayer(): Response
+    {
+        return Inertia::render('VersusPlayer');
+    }
+
     public function moveMade()
     {
         MoveMade::dispatch();
