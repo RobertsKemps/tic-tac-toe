@@ -17,7 +17,7 @@
     </div>
 
     <div class="text-center">
-        <h2 v-if="winner" class="text-3xl font-bold mb-8">Player {{ winner }} wins!</h2>
+        <h2 v-if="winner" class="text-3xl font-bold mb-8">{{ winner }}</h2>
         <button @click="resetGame"
                 class="px-4 py-2 bg-green-500 rounded uppercase font-bold hover:bg-green-700 duration-300"
         >
@@ -45,6 +45,7 @@ export default {
             ['', '', ''],
             ['', '', ''],
         ]);
+
         const calculateWinner = (squares) => {
             //All possible winning combinations
             const lines = [
@@ -61,12 +62,19 @@ export default {
                 const [a, b, c] = lines[i];
                 //Return the value that is found in the winning square
                 if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
-                    return squares[a];
+                    return 'Player '+squares[a]+ ' wins!';
                 }
             }
+
+            if (!squares.includes('')) {
+                return 'Tie';
+            }
+
             return null;
         }
+
         const winner = computed(() => calculateWinner(board.value.flat()));
+
         const makeMove = (x, y) => {
             //If there is a winner then do nothing
             if (winner.value) return;
@@ -84,6 +92,7 @@ export default {
                 player.value = player.value === 'X' ? 'O' : 'X';
             }
         };
+
         const resetGame = () => {
             board.value = [
                 ['', '', ''],
