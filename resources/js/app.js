@@ -1,5 +1,7 @@
 import { createApp, h } from 'vue'
 import { createInertiaApp } from '@inertiajs/inertia-vue3'
+import Echo from 'laravel-echo';
+import Pusher from "pusher-js";
 
 createInertiaApp({
     resolve: name => require(`./Pages/${name}`),
@@ -10,3 +12,12 @@ createInertiaApp({
             .mount(el)
     },
 })
+
+window.Echo = new Echo({
+    broadcaster: 'pusher',
+    key: 'tic-tac-toe',
+    forceTLS: false,
+    wsHost: 'localhost',
+    wsPort: 6001,
+    encrypted: false
+});

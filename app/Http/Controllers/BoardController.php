@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Events\MoveMade;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -23,5 +24,10 @@ class BoardController extends Controller
     public function versusBot(): Response
     {
         return Inertia::render('BasicBoard', ['versusBot' => true]);
+    }
+
+    public function moveMade()
+    {
+        MoveMade::dispatch();
     }
 }

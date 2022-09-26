@@ -39,5 +39,12 @@ import Layout from "../Shared/Layout";
 export default {
     components: { Link },
     layout: Layout,
+
+    mounted() {
+        window.Echo.channel('channel')
+            .listen('MoveMade', (e) => {
+                console.log(e);
+            });
+    }
 };
 </script>
