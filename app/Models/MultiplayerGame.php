@@ -12,11 +12,11 @@ class MultiplayerGame extends Model
     public const PLAYER_X = 'X';
     public const PLAYER_O = 'O';
 
-    public const OUTCOME__WAITING_FOR_PLAYER_O = 0;
-    public const OUTCOME__GAME_STARTED = 1;
-    public const OUTCOME__GAME_WON_BY_X = 2;
-    public const OUTCOME__GAME_WON_BY_O = 3;
-    public const OUTCOME__GAME_TIED = 4;
+    public const STATUS__WAITING_FOR_PLAYER_O = 0;
+    public const STATUS__GAME_STARTED = 1;
+    public const STATUS__GAME_WON_BY_X = 2;
+    public const STATUS__GAME_WON_BY_O = 3;
+    public const STATUS__GAME_TIED = 4;
 
     /**
      * The attributes that should be cast to native types.
