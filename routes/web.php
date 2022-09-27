@@ -20,4 +20,4 @@ Route::get('basic', [BoardController::class, 'basicGame'])->name('game.basic');
 Route::get('versus/bot', [BoardController::class, 'versusBot'])->name('game.versus.bot');
 Route::get('versus/player', [BoardController::class, 'versusPlayer'])->name('game.versus.player');
 
-Route::get('/versus/player/move-made', [BoardController::class, 'moveMade'])->name('game.versus.player.move');
+Route::post('/versus/player/move-made', [BoardController::class, 'moveMade'])->name('game.versus.player.move');

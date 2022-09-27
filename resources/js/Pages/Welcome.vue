@@ -32,7 +32,7 @@
         </div>
 
         <div class="flex flex-col max-w-lg lg:min-w-full p-6 mx-auto text-center text-gray-900 bg-white border border-gray-100 rounded-lg shadow dark:border-gray-600 xl:p-8">
-            <h3 class="mb-4 text-2xl font-semibold">Multiplayer version</h3>
+            <h3 class="mb-4 text-2xl font-semibold">Multiplayer</h3>
             <p class="font-light text-gray-500 sm:text-lg">Play vs a fellow human</p>
             <Link :href="route('game.versus.player')"
                   class="mt-4 bottom-0 text-white bg-purple-500 hover:bg-purple-700 focus:ring-4 focus:ring-purple-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center"

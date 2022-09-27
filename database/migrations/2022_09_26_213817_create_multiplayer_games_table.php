@@ -21,7 +21,7 @@ return new class extends Migration {
             $table->string('player_o_session_id')->nullable();
             $table->json('board_state');
             $table->char('active_move', 1)->default('X');
-            $table->tinyInteger('status')->default(MultiplayerGame::OUTCOME__WAITING_FOR_PLAYER_O);
+            $table->tinyInteger('status')->default(MultiplayerGame::STATUS__WAITING_FOR_PLAYER_O);
             $table->timestamps();
         });
     }

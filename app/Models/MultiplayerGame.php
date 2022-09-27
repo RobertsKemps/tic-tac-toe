@@ -19,6 +19,13 @@ class MultiplayerGame extends Model
     public const STATUS__GAME_TIED = 4;
 
     /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = ['player_x_session_id'];
+
+    /**
      * The attributes that should be cast to native types.
      *
      * @var array
@@ -33,6 +40,6 @@ class MultiplayerGame extends Model
      * @var array
      */
     protected $attributes = [
-        'board_state' => [["", "", ""], ["", "", ""], ["", "", ""]],
+        'board_state' => '[["", "", ""], ["", "", ""], ["", "", ""]]',
     ];
 }

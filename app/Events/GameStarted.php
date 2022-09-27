@@ -4,34 +4,30 @@ namespace App\Events;
 
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
+use Illuminate\Broadcasting\PresenceChannel;
+use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class MoveMade implements ShouldBroadcast
+class GameStarted implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    private array $board;
-    private string $nextPlayerMove;
-    private string $matchId;
+    private int $matchId;
+    private string $playerXId;
 
     /**
-     * Create a new event instance.
-     *
      * @return void
      */
-    public function __construct(array $board, string $nextPlayerMove, int $matchId)
+    public function __construct(int $matchId, string $playerXId)
     {
-        $this->board = $board;
-        $this->nextPlayerMove = $nextPlayerMove;
         $this->matchId = $matchId;
+        $this->playerXId = $playerXId;
     }
 
     /**
-     * Get the channels the event should broadcast on.
-     *
-     * @return Channel
+     * @return \Illuminate\Broadcasting\Channel|array
      */
     public function broadcastOn()
     {
@@ -44,9 +40,8 @@ class MoveMade implements ShouldBroadcast
     public function broadcastWith()
     {
         return [
-            'board' => $this->board,
-            'nextPlayerMove' => $this->nextPlayerMove,
-            'matchId' => (string)$this->matchId,
+            'matchId' => $this->matchId,
+            'playerXId' => $this->playerXId,
         ];
     }
 }

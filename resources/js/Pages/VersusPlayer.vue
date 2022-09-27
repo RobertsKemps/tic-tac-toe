@@ -1,10 +1,16 @@
 <template>
     <div class="text-center">
-        <h1 class="font-bold font-sans break-normal text-gray-900 pt-6 pb-2 text-3xl md:text-4xl">Tic tac toe game</h1>
-        <p class="text-sm md:text-base font-normal text-gray-900 pb-2">Player <b>{{ player }}</b> turn</p>
+        <h1 class="font-bold font-sans break-normal text-gray-900 pt-6 pb-2 text-3xl md:text-4xl">
+            Tic tac toe game
+        </h1>
+        <p class="text-md md:text-base font-normal text-gray-900 pb-2">{{ boardStatus }}</p>
     </div>
 
     <div class="flex flex-col items-center mb-8">
+        <loading v-model:active="isLoading"
+                 :can-cancel="false"
+                 :is-full-page="fullPage"/>
+
         <div v-for="(row, x) in board" :key="x" class="flex">
             <div
                 v-for="(cell, y) in row" :key="y"
@@ -15,14 +21,13 @@
             </div>
         </div>
     </div>
-
     <div class="text-center">
         <h2 v-if="winner" class="text-3xl font-bold mb-8">{{ winner }}</h2>
-        <button @click="resetGame"
+        <Link :href="route('game.versus.player')"
                 class="px-4 py-2 bg-green-500 rounded uppercase font-bold hover:bg-green-700 duration-300"
         >
-            Reset
-        </button>
+            New game
+        </Link>
     </div>
 </template>
 
@@ -30,80 +35,90 @@
 import {ref, computed} from 'vue';
 import {Link} from '@inertiajs/inertia-vue3';
 import Layout from '../Shared/Layout';
+import loading from 'vue-loading-overlay';
+import 'vue-loading-overlay/dist/vue-loading.css';
+import {calculateWinner} from '../Services/BoardLogicService';
+
 
 export default {
-    components: { Link },
+    components: {Link, loading},
     layout: Layout,
     props: {
-        versusBot: Boolean,
+        playerId: String,
+        matchId: Number,
     },
-    setup(props) {
-        window.Echo.channel('channel')
-            .listen('MoveMade', (e) => {
-                console.log(e);
-            });
 
-        const player = ref('X');
-        const board = ref([
+    setup(props) {
+        const winner = computed(() => calculateWinner(board.value.flat()));
+
+        let isLoading = ref(true);
+        let fullPage = ref(true);
+        let boardStatus = ref('Waiting for player O to connect');
+        let player = ref('O');
+        let board = ref([
             ['', '', ''],
             ['', '', ''],
             ['', '', ''],
         ]);
 
-        const calculateWinner = (squares) => {
-            //All possible winning combinations
-            const lines = [
-                [0, 1, 2],
-                [3, 4, 5],
-                [6, 7, 8],
-                [0, 3, 6],
-                [1, 4, 7],
-                [2, 5, 8],
-                [0, 4, 8],
-                [2, 4, 6],
-            ];
-            for (let i = 0; i < lines.length; i++) {
-                const [a, b, c] = lines[i];
-                //Return the value that is found in the winning square
-                if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
-                    return 'Player '+squares[a]+ ' wins!';
+        window.Echo.channel('channel')
+            .listen('GameStarted', (e) => {
+                if (e.playerXId === props.playerId && props.matchId === e.matchId) {
+                    player.value = 'X';
+                    isLoading.value = false;
+                    boardStatus.value = 'Player O has connected, player X`s turn';
                 }
-            }
+            });
 
-            if (!squares.includes('')) {
-                return 'Tie';
-            }
+        window.Echo.channel('channel')
+            .listen('MoveMade', (e) => {
+                board.value = e.board;
 
-            return null;
-        }
+                if (calculateWinner(board.value.flat())) {
+                    isLoading.value = false;
 
-        const winner = computed(() => calculateWinner(board.value.flat()));
+                    return;
+                }
+
+                if (props.matchId == e.matchId) {
+                    boardStatus.value = 'Player`s ' + e.nextPlayerMove +' move';
+
+                    if (player.value == e.nextPlayerMove) {
+                        isLoading.value = false;
+                    }
+                }
+            });
 
         const makeMove = (x, y) => {
             //If there is a winner then do nothing
             if (winner.value) return;
             //Return if a symbol is already placed on the square
             if (board.value[x][y] !== '') return;
+
             board.value[x][y] = player.value;
-            //Change who's turn it is after making a move
-            player.value = player.value === 'X' ? 'O' : 'X';
+            isLoading.value = true;
+
+            addNewMove(x, y, player);
         };
 
-        const resetGame = () => {
-            board.value = [
-                ['', '', ''],
-                ['', '', ''],
-                ['', '', ''],
-            ];
-            player.value = 'X';
-        };
+        const addNewMove = (x, y, player) => {
+            window.axios
+                .post('/versus/player/move-made', {
+                    matchId: props.matchId,
+                    playerValue: player.value,
+                    playerId:  props.playerId,
+                    board: board.value,
+                });
+        }
 
         return {
             player,
             board,
+            boardStatus,
             winner,
+            isLoading,
+            fullPage,
             makeMove,
-            resetGame,
         }
     },
 }

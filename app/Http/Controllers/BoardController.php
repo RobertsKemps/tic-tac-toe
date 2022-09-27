@@ -4,12 +4,24 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Events\GameStarted;
 use App\Events\MoveMade;
+use App\Services\MultiplayerGameService;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Response;
 
 class BoardController extends Controller
 {
+    private MultiplayerGameService $multiplayerGameService;
+
+    public function __construct(MultiplayerGameService $multiplayerGameService)
+    {
+        $this->multiplayerGameService = $multiplayerGameService;
+    }
+
     /**
      * @return Response
      */
@@ -31,11 +43,17 @@ class BoardController extends Controller
      */
     public function versusPlayer(): Response
     {
-        return Inertia::render('VersusPlayer');
+        $playerId = Str::random(10);
+        $match = $this->multiplayerGameService->createGame($playerId);
+
+        return Inertia::render('VersusPlayer', ['playerId' => $playerId, 'player', 'matchId' => $match->id]);
     }
 
-    public function moveMade()
+    /**
+     * @param Request $request
+     */
+    public function moveMade(Request $request): void
     {
-        MoveMade::dispatch();
+        $this->multiplayerGameService->makeMove($request->get('matchId'), $request->get('playerValue'), $request->get('playerId'), $request->get('board'));
     }
 }
