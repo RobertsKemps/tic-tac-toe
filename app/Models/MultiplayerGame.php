@@ -14,9 +14,6 @@ class MultiplayerGame extends Model
 
     public const STATUS__WAITING_FOR_PLAYER_O = 0;
     public const STATUS__GAME_STARTED = 1;
-    public const STATUS__GAME_WON_BY_X = 2;
-    public const STATUS__GAME_WON_BY_O = 3;
-    public const STATUS__GAME_TIED = 4;
 
     /**
      * The attributes that are mass assignable.

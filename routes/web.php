@@ -16,8 +16,12 @@ use Inertia\Inertia;
 */
 
 Route::inertia('/', 'Welcome')->name('index');
-Route::get('basic', [BoardController::class, 'basicGame'])->name('game.basic');
-Route::get('versus/bot', [BoardController::class, 'versusBot'])->name('game.versus.bot');
-Route::get('versus/player', [BoardController::class, 'versusPlayer'])->name('game.versus.player');
 
-Route::post('/versus/player/move-made', [BoardController::class, 'moveMade'])->name('game.versus.player.move');
+Route::get('basic', [BoardController::class, 'basicGame'])->name('game.basic');
+
+Route::group(['prefix' => 'versus'], function () {
+    Route::get('bot', [BoardController::class, 'versusBot'])->name('game.versus.bot');
+    Route::get('player', [BoardController::class, 'versusPlayer'])->name('game.versus.player');
+    Route::post('player/move-made', [BoardController::class, 'moveMade'])->name('game.versus.player.move');
+});
+

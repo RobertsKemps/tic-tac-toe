@@ -54,7 +54,7 @@ class MultiplayerGameService
      * @param string $playerId
      * @param array $board
      */
-    public function makeMove(int $matchId, string $playerValue, string $playerId, array $board)
+    public function makeMove(int $matchId, string $playerValue, array $board): void
     {
         $match = $this->multiplayerGameRepository->getGameById($matchId);
         $match->board_state = $board;

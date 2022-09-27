@@ -4,7 +4,7 @@
     </section>
 
     <section class="pt-6">
-        <div class="md:max-w-4xl mx-auto p-4">
+        <div class="md:max-w-4xl mx-auto p-4 ">
             <slot />
         </div>
     </section>

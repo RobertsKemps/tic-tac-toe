@@ -54,6 +54,6 @@ class BoardController extends Controller
      */
     public function moveMade(Request $request): void
     {
-        $this->multiplayerGameService->makeMove($request->get('matchId'), $request->get('playerValue'), $request->get('playerId'), $request->get('board'));
+        $this->multiplayerGameService->makeMove($request->get('matchId'), $request->get('playerValue'), $request->get('board'));
     }
 }
