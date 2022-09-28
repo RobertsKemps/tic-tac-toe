@@ -44,7 +44,7 @@
 </template>
 <script>
 import {Link} from '@inertiajs/inertia-vue3';
-import Layout from "../Shared/Layout";
+import Layout from '../Shared/Layout';
 
 export default {
     components: { Link },

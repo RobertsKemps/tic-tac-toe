@@ -50,17 +50,22 @@ export default {
         const makeMove = (x, y) => {
             //If there is a winner then do nothing
             if (winner.value) return;
+
             //Return if a symbol is already placed on the square
             if (board.value[x][y] !== '') return;
+
             board.value[x][y] = player.value;
+
             //Change who's turn it is after making a move
             player.value = player.value === 'X' ? 'O' : 'X';
             if (props.versusBot) {
-                //Change who's turn it is after making a move
                 let botMove = minimax(JSON.parse(JSON.stringify(board)), player.value);
+
                 if (botMove.move) {
                     board.value[botMove.move.x][botMove.move.y] = player.value;
                 }
+
+                //Change who's turn it is after making a move
                 player.value = player.value === 'X' ? 'O' : 'X';
             }
         };

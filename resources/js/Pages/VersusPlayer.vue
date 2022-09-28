@@ -39,7 +39,6 @@ import loading from 'vue-loading-overlay';
 import 'vue-loading-overlay/dist/vue-loading.css';
 import {calculateWinner} from '../Services/BoardLogicService';
 
-
 export default {
     components: {Link, loading},
     layout: Layout,
@@ -81,7 +80,7 @@ export default {
                 }
 
                 if (props.matchId == e.matchId) {
-                    boardStatus.value = 'Player`s ' + e.nextPlayerMove +' move';
+                    boardStatus.value = 'Player`s ' + e.nextPlayerMove + ' move';
 
                     if (player.value == e.nextPlayerMove) {
                         isLoading.value = false;
@@ -92,6 +91,7 @@ export default {
         const makeMove = (x, y) => {
             //If there is a winner then do nothing
             if (winner.value) return;
+
             //Return if a symbol is already placed on the square
             if (board.value[x][y] !== '') return;
 
@@ -106,7 +106,7 @@ export default {
                 .post('/versus/player/move-made', {
                     matchId: props.matchId,
                     playerValue: player.value,
-                    playerId:  props.playerId,
+                    playerId: props.playerId,
                     board: board.value,
                 });
         }

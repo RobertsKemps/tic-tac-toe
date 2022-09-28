@@ -10,8 +10,10 @@ export const calculateWinner = (squares) => {
         [0, 4, 8],
         [2, 4, 6],
     ];
+
     for (let i = 0; i < lines.length; i++) {
         const [a, b, c] = lines[i];
+
         //Return the value that is found in the winning square
         if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
             return 'Player '+squares[a]+ ' wins!';
