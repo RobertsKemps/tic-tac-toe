@@ -1,16 +1,34 @@
 //Minimax algorithm is not quite working as it should
+import {calculateWinner} from "./BoardLogicService";
+
 export const minimax = (board, player, depth = 1) => {
+    let hasGameEnd = calculateWinner(board._value.flat());
+    if (hasGameEnd && hasGameEnd !== 'Tie') {
+        return {
+            score: player === 'X' ? 10 : -10,
+            move: null
+        }
+    }
+
+    if (hasGameEnd === 'Tie') {
+        return {
+            score: 0,
+            move: null
+        }
+    }
+
     // The 'o' player wants to maximize its score, the 'x' player wants to minimize its score.
-    let bestScore = player === 'O' ? -10000 : 10000;
+    let bestScore = player === 'O' ? -Infinity : Infinity;
     let bestMove = null;
     let moves = getPossibleMoves(board);
 
-    for (let i = 0; i < moves.length; i++) {
+    for (let i = 0; i < moves.length-1; i++) {
         let move = moves[i];
-        let newBoard = board;
-        newBoard._value[move.x][move.y] = player;
+        let newBoard = JSON.parse(JSON.stringify(board));
 
-        makeAiMove(move.x, move.y, player, newBoard);
+        if (newBoard._value[move.x][move.y] === '') {
+            newBoard._value[move.x][move.y] = player;
+        }
 
         // Recursively call the minimax function for the new board.
         const score = minimax(newBoard, player === 'X' ? 'O' : 'X', depth + 1).score;
@@ -34,21 +52,11 @@ const getPossibleMoves = (aiMoveBoard) => {
 
     for (let i = 0; i < 3; i++) {
         for (let j = 0; j < 3; j++) {
-            if (aiMoveBoard._rawValue[i][j] === '') {
+            if (aiMoveBoard._value[i][j] === '') {
                 moves.push({x: i, y: j});
             }
         }
     }
 
     return moves;
-}
-
-const makeAiMove = (x, y, player, aiMoveBoard) => {
-    if (aiMoveBoard._rawValue[x][y] !== '') {
-        return false;
-    }
-
-    aiMoveBoard._rawValue[x][y] = player;
-
-    return true;
 }

@@ -29,8 +29,8 @@
 <script>
 import {ref, computed} from 'vue';
 import Layout from '../Shared/Layout';
-import {minimax} from '../Services/aiLogicService';
-import {calculateWinner} from "../Services/BoardLogicService";
+import {minimax} from '../Services/AiLogicService';
+import {calculateWinner} from '../Services/BoardLogicService';
 
 export default {
     layout: Layout,

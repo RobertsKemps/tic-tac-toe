@@ -16,7 +16,7 @@ export const calculateWinner = (squares) => {
 
         //Return the value that is found in the winning square
         if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
-            return 'Player '+squares[a]+ ' wins!';
+            return squares[a];
         }
     }
 
@@ -26,3 +26,4 @@ export const calculateWinner = (squares) => {
 
     return null;
 }
+
