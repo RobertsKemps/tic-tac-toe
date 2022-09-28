@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Events;
 
 use Illuminate\Broadcasting\Channel;
@@ -14,7 +16,7 @@ class MoveMade implements ShouldBroadcast
 
     private array $board;
     private string $nextPlayerMove;
-    private string $matchId;
+    private int $matchId;
 
     /**
      * Create a new event instance.
@@ -33,7 +35,7 @@ class MoveMade implements ShouldBroadcast
      *
      * @return Channel
      */
-    public function broadcastOn()
+    public function broadcastOn(): Channel
     {
         return new Channel('channel');
     }

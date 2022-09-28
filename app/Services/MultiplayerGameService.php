@@ -51,7 +51,6 @@ class MultiplayerGameService
     /**
      * @param int $matchId
      * @param string $playerValue
-     * @param string $playerId
      * @param array $board
      */
     public function makeMove(int $matchId, string $playerValue, array $board): void
