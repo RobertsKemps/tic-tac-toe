@@ -10,12 +10,11 @@ The project was developed using:
 ### Detailed development information
 - [Composer](https://getcomposer.org/download/) v2.4.2
 - [Docker](https://www.docker.com/) v4.12.0
-  - PHP v8.1.10
-  - MySQL v8.0
+  - [PHP](https://www.php.net/) v8.1.10
+  - [MySQL](https://www.mysql.com/) v8.0.30
+  - [NodeJs](https://nodejs.org/en/) v16.17.0
+  - [npm](https://www.npmjs.com/) v8.19.2
 - [Laravel](https://laravel.com/docs/8.x/installation) v9.31.0
-- [NodeJs](https://nodejs.org/en/) v16.17.0
-- [npm](https://www.npmjs.com/) v8.19.2
-- MySQL v5.7.36
 
 # Setup
 
