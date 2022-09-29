@@ -1,10 +1,5 @@
 <template>
-    <div class="text-center">
-        <h1 class="font-bold font-sans break-normal text-gray-900 pt-6 pb-2 text-3xl md:text-4xl">
-            Tic tac toe game
-        </h1>
-        <p class="text-md md:text-base font-normal text-gray-900 pb-2">{{ boardStatus }}</p>
-    </div>
+    <BoardHeader :board-status="boardStatus"/>
 
     <div class="flex flex-col items-center mb-8">
         <loading v-model:active="isLoading"
@@ -22,7 +17,7 @@
         </div>
     </div>
     <div class="text-center">
-        <h2 v-if="winner" class="text-3xl font-bold mb-8">{{ winner }}</h2>
+        <Winner :winner="winner" />
         <Link :href="route('game.versus.player')"
                 class="px-4 py-2 bg-green-500 rounded uppercase font-bold hover:bg-green-700 duration-300"
         >
@@ -38,9 +33,11 @@ import Layout from '../Shared/Layout';
 import loading from 'vue-loading-overlay';
 import 'vue-loading-overlay/dist/vue-loading.css';
 import {calculateWinner} from '../Services/BoardLogicService';
+import Winner from '../Components/Winner';
+import BoardHeader from '../Components/BoardHeader';
 
 export default {
-    components: {Link, loading},
+    components: {Link, loading, Winner, BoardHeader},
     layout: Layout,
     props: {
         playerId: String,
