@@ -2,7 +2,10 @@
 
 Developed by [**Roberts Kemps**](https://lv.linkedin.com/in/robertskemps)
 
-The project was developed using [Laravel Sail](https://laravel.com/docs/9.x/sail) 
+The project was developed using:
+- [Composer](https://getcomposer.org/download/) (will be needed on local machine to run the project)
+- [Docker](https://www.docker.com/) (will be needed on local machine to run the project)
+- [Laravel Sail](https://laravel.com/docs/9.x/sail) (will be installed with `composer install` command)
 
 ### Detailed development information
 - [Composer](https://getcomposer.org/download/) v2.4.2
